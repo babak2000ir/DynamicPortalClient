@@ -1,0 +1,9 @@
+{
+  "name": "portalpoc-frontend",
+  "version": "1.1.2",
+  "description": "Portal POC Api and Website",
+  "scripts": {
+    "build": "cd server && npm run build && cd .. && cd client && npm run build",
+    "start": "cd dist && node server.cjs"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "npm i && webpack --config ./webpack.config.js --mode=production",
+    "dev": "npm i && webpack --config ./webpack.config.js --mode=development"
+  },
+  "author": "Babak Jahedmanesh <babak.jahedmanesh@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "axios-oauth-client": "^2.2.0",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "koa": "^2.15.3",
+    "koa-bodyparser": "^4.4.1",
+    "koa-helmet": "^7.0.2",
+    "koa-ratelimit": "^5.1.0",
+    "koa-router": "^13.0.1",
+    "koa-static": "^5.0.0",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7",
+    "nodemon-webpack-plugin": "^4.8.2",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

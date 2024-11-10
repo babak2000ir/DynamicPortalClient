@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pagination button:hover {
+    background-color: rgb(20 184 166) !important;
+    color: white !important;
+}
+
+.table-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.table-dropdown:focus {
+    border: 1px solid rgb(55, 201, 201);
+    outline: none;
+}
+
+.form-wrapper input[type=text],
+.form-wrapper input[type=number],
+.form-wrapper input[type=time],
+.form-wrapper input[type=date],
+.form-wrapper input[type=datetime-local],
+.form-wrapper select {
+    border: 1px solid #2222;
+    padding: 2px 6px;
+    width: 50%;
+    outline: none;
+}
+
+.form-wrapper input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+}
+
+.form-wrapper input:focus {
+    border: 1px solid rgb(20 184 166);
+}
+
+input:read-only {
+    background-color: #f1f1f1;
+}
+
+.alert-success {
+    @apply bg-green-200;
+}
+
+.alert-success span {
+    @apply bg-green-700 hover:bg-green-500;
+}
+
+.alert-error {
+    @apply bg-red-300 text-black;
+}
+
+.alert-error span {
+    @apply bg-red-700;
+}
+
+.alert-warning {
+    @apply bg-yellow-200;
+}
+
+.alert-warning span {
+    @apply bg-yellow-500;
+}
+
+.alert-info {
+    @apply bg-blue-200;
+}
+
+.alert-info span {
+    @apply bg-blue-700;
+}
+
+#error-tooltip {
+    @apply z-[100];
+}
+
+@layer base {
+    .prose-nform {
+        @apply prose prose-a:no-underline prose-a:cursor-pointer prose-li:p-0 prose-li:m-0 max-w-full;
+    }
+
+    .w3-modal-content {
+        @apply w-[90%];
+    }
+
+    .main-wrapper {
+        @apply lg:ml-[25%] xl:ml-[16.8%];
+    }
+}

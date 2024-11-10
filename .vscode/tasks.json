@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Development",
+            "type": "shell",
+            "command": "echo Starting",
+            "problemMatcher": [],
+            "dependsOn": [
+                "Client",
+                "Server"
+            ]
+        },
+{
+            "type": "npm",
+            "path": "client",    
+            "script": "start",
+            "problemMatcher": [],
+            "label": "Client"
+        },
+        {
+            "type": "npm",
+            "path": "server",
+            "script": "dev",
+            "problemMatcher": [],
+            "label": "Server",
+        },
+        
+    ]
+}
