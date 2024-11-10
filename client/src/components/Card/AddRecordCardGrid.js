@@ -57,3 +57,4 @@ const AddRecordCardGrid = () => {
 };
 
 export default AddRecordCardGrid;
+//TODO: debounce the add button

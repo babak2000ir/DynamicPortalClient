@@ -97,7 +97,7 @@ export const mapPrimaryKeyFieldstoRecord = (fields, record) => {
         .filter((field) => field.partOfPrimaryKey)
         .map((field) => ({
             id: String(field.id),
-            value: record[field.id - 1],
+            value: record[fields.indexOf(field)],
             type: field.type,
         }));
 };
