@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { selectFields, useGlobalStore, usePageStore, selectEntity, selectRelations, selectRelatedEntityCode } from '../../stores';
+import { selectFields, useGlobalStore, selectEntity, selectRelations, selectRelatedEntityCode } from '../../stores';
 import { useCancelRecordAction } from '../../hooks/cancelRecordActionHook';
 import { useUpdateRecord } from '../../hooks/updateRecordHook';
 import { cardPageContext } from '../../context/globalContext';
@@ -9,9 +9,9 @@ import AddRecordCardGrid from './AddRecordCardGrid';
 import RecordRelationsList from '../List/RecordRelationsList';
 import { mapPrimaryKeyFieldstoRecord } from '../../helpers';
 
-export const Card = ({ selectedEntityCode }) => {
+export const Card = ({ useCardPageStore, selectedEntityCode }) => {
     const [tabIndex, setTabIndex] = useState(0);
-    const { showCard, record, updateDisabled, searchError, cardParams } = usePageStore();
+    const { showCard, record, updateDisabled, searchError, cardParams } = useCardPageStore();
     const { setRecordRelationsLoading } = useGlobalStore();
     const entity = useGlobalStore(selectEntity(selectedEntityCode));
     const fields = useGlobalStore(selectFields(selectedEntityCode));

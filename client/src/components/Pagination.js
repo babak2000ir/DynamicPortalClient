@@ -1,8 +1,8 @@
 import React from 'react';
-import { useGlobalStore, usePageStore } from '../stores';
+import { useGlobalStore } from '../stores';
 
-const Pagination = ({ pageCount, pageIndex, setPageIndex }) => {
-    const { showRelatedTable } = usePageStore();
+const Pagination = ({ useListPageStore, pageCount, pageIndex, setPageIndex }) => {
+    const { showRelatedTable } = useListPageStore();
     const { setLoading, quickEdit, quickAdd, setRelatedTableLoading } = useGlobalStore();
     const setLoadingFunction = showRelatedTable ? setRelatedTableLoading : setLoading;
 

@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { useGlobalStore } from "../stores";
-import { searchRelatedTableRecord } from "../services/entitySvc";
 import { cardPageContext } from "../context/globalContext";
 
 export const useFieldCore = ({ fieldValue, setFieldValue, fieldName, setFieldName, setUpdateDisabled, updateDisabled, record, setRecord, setShowRelatedTable, setSearchError, fieldInfo }) => {
@@ -53,7 +52,7 @@ export const useFieldCore = ({ fieldValue, setFieldValue, fieldName, setFieldNam
         if (!updateDisabled && fieldValue.trim() !== '') {
             try {
                 setSearching(true);
-                const response = await searchRelatedTableRecord(entityCode, fieldValue);
+                const response = ''; //await searchRelatedTableRecord(entityCode, fieldValue);
                 if (response) {
                     if (response.error) {
                         setSearchError(`The field ${fieldName} contains a value (${fieldValue}) that cannot be found in the related table (${entity.caption}).`);

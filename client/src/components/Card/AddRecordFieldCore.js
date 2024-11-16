@@ -1,16 +1,15 @@
 import React, { useState, useContext } from 'react';
 import { timeFromXmlTimeString, dateFromXmlDateString, dateTimeFromXmlDateTimeString } from '../../helpers';
-import { usePageStore, useGlobalStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 import { Tooltip } from 'react-tooltip';
-import { searchRelatedTableRecord } from '../../services/entitySvc';
 import SearchLoader from '../Loader/SearchLoader';
 import { cardPageContext } from '../../context/globalContext';
 
-const AddRecordFieldCore = ({ field, updateFieldValidity, fieldsProp }) => {
+const AddRecordFieldCore = ({ useCardPageStore, field, updateFieldValidity, fieldsProp }) => {
     const [fieldValue, setFieldValue] = useState('');
     const [fieldName, setFieldName] = useState('');
     const [searching, setSearching] = useState(false);
-    const { setUpdateDisabled, updateDisabled, record, setRecord, setShowRelatedTable, searchError, setSearchError } = usePageStore();
+    const { setUpdateDisabled, updateDisabled, record, setRecord, setShowRelatedTable, searchError, setSearchError } = useCardPageStore();
     const { setRelatedTableLoading, quickAdd, entities } = useGlobalStore();
     const { fields } = useContext(cardPageContext);
     const fieldsList = fields ? fields : fieldsProp;
@@ -63,7 +62,7 @@ const AddRecordFieldCore = ({ field, updateFieldValidity, fieldsProp }) => {
         if (!updateDisabled && fieldValue.trim() !== '') {
             try {
                 setSearching(true);
-                const response = await searchRelatedTableRecord(entityCode, fieldValue);
+                const response = ''; //await searchRelatedTableRecord(entityCode, fieldValue);
                 if (response) {
                     if (response.error) {
                         setSearchError(`The field ${fieldName} contains a value (${fieldValue}) that cannot be found in the related table (${entity.caption}).`);

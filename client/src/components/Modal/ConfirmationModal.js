@@ -1,12 +1,12 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useGlobalStore, usePageStore, selectFields } from '../../stores';
+import { useGlobalStore, selectFields } from '../../stores';
 import { amendEntity } from '../../services/entitySvc';
 import { mapPrimaryKeyFieldstoRecord } from '../../helpers';
 
-const ConfirmationModal = () => {
+const ConfirmationModal = ({ useCardPageStore }) => {
     const { setShowModal, showModal, modalParams, setRowIndex, setAlert } = useGlobalStore();
-    const { setShowCard, setUpdateDisabled, setSearchError } = usePageStore();
+    const { setShowCard, setUpdateDisabled, setSearchError } = useCardPageStore();
     const fields = useGlobalStore(selectFields(modalParams?.selectedEntityCode));
 
     const handleCancel = () => {

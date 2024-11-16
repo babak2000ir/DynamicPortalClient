@@ -1,7 +1,8 @@
 {
     "id": "f78c2bdc-35fd-410d-ab0b-6dc507276424",
+    "type": "card",
     "entity": "CURRENCY",
-    "title": "Currency List",
+    "title": "Currency Card",
     "create": {
         "listCreate": true,
         "cardCreate": true
@@ -13,7 +14,7 @@
     },
     "delete": true,
     "paging":{
-        "pageSize": 20,
         "pagination": true
-    }
+    },
+    "tableRelations": true
 }

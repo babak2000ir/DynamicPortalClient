@@ -1,11 +1,11 @@
 
-import { selectFields, useGlobalStore, usePageStore } from "../stores";
+import { selectFields, useGlobalStore } from "../stores";
 import { getUpdatedRecordAndFields } from "../helpers";
 import { amendEntity } from "../services/entitySvc";
 import { v4 as uuidv4 } from 'uuid';
 
-export const useUpdateRecord = (selectedEntityCode) => {
-    const { setShowCard, record, setUpdateDisabled, cardParams, updateDisabled, setSearchError } = usePageStore();
+export const useUpdateRecord = (useCardPageStore, selectedEntityCode) => {
+    const { setShowCard, record, setUpdateDisabled, cardParams, updateDisabled, setSearchError } = useCardPageStore();
     const { rowIndex, setAlert } = useGlobalStore();
     const fields = useGlobalStore(selectFields(selectedEntityCode));
 

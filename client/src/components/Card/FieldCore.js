@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { timeFromXmlTimeString, dateFromXmlDateString, dateTimeFromXmlDateTimeString } from '../../helpers';
-import { usePageStore, useGlobalStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 import { Tooltip } from 'react-tooltip';
-import { searchRelatedTableRecord } from '../../services/entitySvc';
 import SearchLoader from '../Loader/SearchLoader';
 
-const FieldCore = ({ f, fInfo, fields }) => {
+const FieldCore = ({ useCardPageStore, f, fInfo, fields }) => {
     const [fieldValue, setFieldValue] = useState(f);
     const [fieldName, setFieldName] = useState('');
     const [searching, setSearching] = useState(false);
-    const { setUpdateDisabled, updateDisabled, record, setRecord, setShowRelatedTable, searchError, setSearchError } = usePageStore();
+    const { setUpdateDisabled, updateDisabled, record, setRecord, setShowRelatedTable, searchError, setSearchError } = useCardPageStore();
     const { setRelatedTableLoading, quickEdit, entities } = useGlobalStore();
 
     const handleInputChange = (e) => {
@@ -57,7 +56,7 @@ const FieldCore = ({ f, fInfo, fields }) => {
         if (!updateDisabled && fieldValue.trim() !== '') {
             try {
                 setSearching(true);
-                const response = await searchRelatedTableRecord(entityCode, fieldValue);
+                const response = ''; //await searchRelatedTableRecord(entityCode, fieldValue);
                 if (response) {
                     if (response.error) {
                         setSearchError(`The field ${fieldName} contains a value (${fieldValue}) that cannot be found in the related table (${entity.caption}).`);

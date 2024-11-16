@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useGlobalStore, usePageStore } from '../../stores';
+import { useGlobalStore } from '../../stores';
 import CoreList from './CoreList';
 
-export const List = ({ selectedEntityCode }) => {
+export const List = ({ useListPageStore, selectedEntityCode }) => {
     const [records, setRecords] = useState([]);
-    const { loadEntity, showRelatedTable } = usePageStore();
+    const { loadEntity, showRelatedTable } = useListPageStore();
     const { setRowIndex, setLoading, setPageIndex, loading, pageIndex, reload } = useGlobalStore();
-    const entityData = usePageStore(state => state.entityCollection[selectedEntityCode]);
+    const entityData = useListPageStore(state => state.entityCollection[selectedEntityCode]);
 
     useEffect(() => {
         const load = async () => {

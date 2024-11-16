@@ -32,7 +32,8 @@ export const entityAmend = async (ctx) => {
 export const initApp = async () => {
     console.log('Init Started.');
     dataHeap.entities = await bcOperation('GetEntities', {})
-        .then(() =>
+        .then((response) => {
             appState.initComplete = true
-        );
+            return response;
+        });
 }

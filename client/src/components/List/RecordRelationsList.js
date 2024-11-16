@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useGlobalStore, usePageStore, selectFields } from '../../stores';
+import { useGlobalStore, selectFields } from '../../stores';
 import Loader from '../Loader/Loader';
 import Pagination from '../Pagination';
 
-const RecordRelationsList = ({ selectedEntityCode, relatedEntityCode, filterParams }) => {
+const RecordRelationsList = ({ useListPageStore, selectedEntityCode, relatedEntityCode, filterParams }) => {
     const [records, setRecords] = useState([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const { loadEntity } = usePageStore();
+    const { loadEntity } = useListPageStore();
     const { setRowIndex, setRecordRelationsLoading, recordRelationsLoading } = useGlobalStore();
-    const entityData = usePageStore(state => state.entityCollection[selectedEntityCode]);
+    const entityData = useListPageStore(state => state.entityCollection[selectedEntityCode]);
     const fields = useGlobalStore(selectFields(selectedEntityCode));
 
     useEffect(() => {

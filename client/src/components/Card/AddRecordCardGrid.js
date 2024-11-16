@@ -1,15 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { usePageStore } from '../../stores';
 import { cardPageContext } from '../../context/globalContext';
 import AddRecordFieldCore from './AddRecordFieldCore';
 import { useAddRecord } from '../../hooks/addRecordHook';
 import { useCancelRecordAction } from '../../hooks/cancelRecordActionHook';
 import { isFormValid } from '../../helpers';
 
-const AddRecordCardGrid = () => {
+const AddRecordCardGrid = ({ useCardPageStore }) => {
     const { fields, selectedEntityCode } = useContext(cardPageContext);
     const [fieldValidity, setFieldValidity] = useState({});
-    const { updateDisabled, setInsertFormValid } = usePageStore();
+    const { updateDisabled, setInsertFormValid } = useCardPageStore();
     const handleAddRecord = useAddRecord(selectedEntityCode);
     const handleCloseCard = useCancelRecordAction(selectedEntityCode);
 

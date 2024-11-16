@@ -1,5 +1,6 @@
 {
-    "id": "f78c2bdc-35fd-410d-ab0b-6dc507276424",
+    "id": "063545c6-3990-48f4-97b1-0001e8757794",
+    "type": "list",
     "entity": "CURRENCY",
     "title": "Currency List",
     "create": {
@@ -13,7 +14,6 @@
     },
     "delete": true,
     "paging":{
-        "pageSize": 20,
         "pagination": true
     }
 }

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobalStore, usePageStore, selectFields } from '../../stores';
+import { useGlobalStore, selectFields } from '../../stores';
 import Loader from '../Loader/Loader';
 import Pagination from '../Pagination';
 
-const RelatedTableList = ({ selectedEntityCode }) => {
+const RelatedTableList = ({ useListPageStore, selectedEntityCode }) => {
     const [rowIndex, setRowIndex] = useState(-1);
     const [records, setRecords] = useState([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const { loadEntity, showRelatedTable, setRelatedTableRecord, setRelatedTableUpdateDisabled } = usePageStore();
+    const { loadEntity, showRelatedTable, setRelatedTableRecord, setRelatedTableUpdateDisabled } = useListPageStore();
     const { setRelatedTableLoading, relatedTableLoading } = useGlobalStore();
-    const entityData = usePageStore(state => state.entityCollection[selectedEntityCode]);
+    const entityData = useListPageStore(state => state.entityCollection[selectedEntityCode]);
     const fields = useGlobalStore(selectFields(selectedEntityCode));
 
     useEffect(() => {

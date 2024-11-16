@@ -1,72 +1,60 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { loadEntitiesAndTables, loadEntity } from './services/entitySvc';
-import { loadUser } from './services/authSvc';
+import { loadEntities, loadRecords, loadRecord } from './services/entitySvc';
+import { loadPages } from './services/codeSvc';
 import { isNumeric } from './helpers';
 
-export const useGlobalStore = create(devtools((set) => ({
+export const useGlobalStore = create(devtools(set => ({
+    //UI
     showSidebar: true,
+    setShowSidebar: (showSidebar) => set({ showSidebar }),
+    selectedPage: null,
+    setSelectedPage: (selectedPage) => set({ selectedPage }),
+
+    //Global Data
+    entitiesLoading: false,
+    entities: [],
+    loadEntities: () => loadEntities(set),
+    pages: [],
+    loadPages: () => loadPages(set),
+
+    //Application State
+    alerts: [],
+    setAlert: (newAlert) => set((state) => ({ alerts: [...state.alerts, newAlert] })),
+    supressAlert: (alertId) => set((state) => ({ alerts: state.alerts.map((alert) => alert.id === alertId ? { ...alert, supressed: true } : alert) })),
+    removeAlert: (alertId) => set((state) => ({ alerts: state.alerts.filter((alert) => alert.id !== alertId) })),
+
+}), 'globalStore'));
+
+export const listPageStore = devtools((set, get) => ({
+    //Entity
+    recordsLoading: false,
+    records: [],
+    loadRecords: (entityCode, view) => loadRecords(set,get, entityCode, view),
+
+    //Page State
     rowIndex: 0,
-    pageIndex: 1,
-    showModal: false,
-    modalParams: {},
-    entities: null,
-    user: {},
-    error: '',
+    setRowIndex: (rowIndex) => set({ rowIndex }),
+    pageIndex: 1,   
+    setPageIndex: (pageIndex) => set({ pageIndex }),
+    quickEdit: false,
+    setQuickEdit: (quickEdit) => set({ quickEdit }),
+    quickAdd: false,
+    setQuickAdd: (quickAdd) => set({ quickAdd }),
+
     loadedPage: 'Dashboard',
     loadedPageParams: {},
     loading: false,
     relatedTableLoading: false,
     recordRelationsLoading: false,
-    alerts: [],
-    quickEdit: false,
-    reload: false,
-    quickAdd: false,
-    authenticated: false,
-    setRowIndex: (rowIndex) => set({ rowIndex }),
-    setPageIndex: (pageIndex) => set({ pageIndex }),
-    setShowSidebar: (showSidebar) => set({ showSidebar }),
-    setShowModal: (showModal, params) => set({ showModal: showModal, modalParams: params }),
-    loadUser: async () => loadUser(),
-    loadEntitiesAndTables: async () => loadEntitiesAndTables(set),
-    setError: (error) => set({ error }),
-    clearError: () => set({ error: '' }),
-    loadPage: (page, params) => set({ loadedPage: page, loadedPageParams: params }),
-    setLoading: (loading) => set({ loading }),
-    setRelatedTableLoading: (relatedTableLoading) => set({ relatedTableLoading }),
-    setRecordRelationsLoading: (recordRelationsLoading) => set({ recordRelationsLoading }),
-    setAlert: (newAlert) => set((state) => ({ alerts: [...state.alerts, newAlert] })),
-    removeAlert: (alertId) => set((state) => ({ alerts: state.alerts.filter((alert) => alert.id !== alertId) })),
-    setQuickEdit: (quickEdit) => set({ quickEdit }),
-    setReload: (reload) => set({ reload }),
-    setQuickAdd: (quickAdd) => set({ quickAdd }),
-    setAuthenticated: (authenticated) => set({ authenticated }),
-    setUser: (user) => set({ user }),
-}), 'globalStore'));
 
+}), 'listPageStore');
 
-export const usePageStore = create(devtools((set, get) => ({
-    record: null,
-    relatedTableRecord: null,
-    showCard: false,
-    showRelatedTable: false,
-    updateDisabled: true,
-    relatedTableUpdateDisabled: true,
-    insertFormValid: false,
-    entityCollection: {},
-    cardParams: {},
-    relatedTableParams: {},
-    searchError: '',
-    setUpdateDisabled: (updateDisabled) => set({ updateDisabled }),
-    setRelatedTableUpdateDisabled: (relatedTableUpdateDisabled) => set({ relatedTableUpdateDisabled }),
-    setShowCard: (showCard, record, cardParams) => set({ showCard, record, cardParams }),
-    loadEntity: async (selectedEntityCode, pageIndex = 1, filterObject = [], relatedEntityCode = '') => loadEntity(set, get, selectedEntityCode, pageIndex, filterObject, relatedEntityCode),
-    setRecord: (record) => set({ record }),
-    setRelatedTableRecord: (relatedTableRecord) => set({ relatedTableRecord }),
-    setShowRelatedTable: (showRelatedTable, relatedTableParams) => set({ showRelatedTable, relatedTableParams }),
-    setSearchError: (searchError) => set({ searchError }),
-    setInsertFormValid: (insertFormValid) => set({ insertFormValid }),
-}), 'pageStore'));
+export const cardPageStore = devtools((set, get) => ({
+    recordLoading: false,
+    record: [],
+    loadRecord: () => loadRecord(set),
+}), 'cardPageStore');
 
 //Selectors
 export const selectFields = (selectedEntityCode) => {
@@ -94,4 +82,3 @@ export const selectRelations = (selectedEntityCode) => {
 }
 //Debug
 window.useGlobalStore = useGlobalStore;
-window.usePageStore = usePageStore;

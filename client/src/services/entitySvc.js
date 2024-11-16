@@ -1,51 +1,44 @@
-import { useGlobalStore, usePageStore } from '../stores';
+import { useGlobalStore } from '../stores';
 import { fetchCall } from './fetchSvc';
-import { isNumeric } from '../helpers';
 
-export const loadEntitiesAndTables = async (set) => {
+export const loadEntities = async (set) => {
     try {
-        const { entities } = await fetchCall('/getEntities');
-        const { tables } = await fetchCall('/getTables');
-        useGlobalStore.setState({ error: '' });
-        set({ entities: [...entities, ...tables] });
+        set({ entitiesLoading: true });
+        const { entities } = await fetchCall('/entity/getEntities')
+        set({ entities });
+        set({ entitiesLoading: false });
     }
     catch (error) {
-        useGlobalStore.setState({ error: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
+        console.log(error);
+        useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
     }
 }
 
-export const loadEntity = async (set, get, entityCode, pageIndex = 1, filterParams = [], relatedEntityCode = '') => {
+export const loadRecords = async (set, get, entityCode, view) => {
     try {
-        const queryString = filterParams.length > 0 ? `?filterParams=${encodeURIComponent(JSON.stringify(filterParams))}&relatedEntityCode=${relatedEntityCode}` : '';
-        const response = await fetchCall(`/${isNumeric(entityCode) ? 'getTableData' : 'getEntityData'}/${entityCode}/${pageIndex || 1}${queryString ? queryString : ''}`);
-        const entity = { ...response.data, entityCode };
-        useGlobalStore.setState({ error: '' });
-        set({ entityCollection: { ...get().entityCollection, [entityCode]: entity } });
-        return entity;
+        const response = await fetchCall(`/entity/getEntityRecords/${entityCode}/${view}/${get.pageIndex || 1}`);
+        set({ records: [...response.data] });
     }
     catch (error) {
-        useGlobalStore.setState({ error: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
+        useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
     }
 }
 
-export const amendEntity = async (entityCode, record, amendType, idFilterString = '') => {
+export const loadRecord = async (set, entityCode, keyFieldsValue) => {
     try {
-        const response = await fetchCall(
-            `/${isNumeric(entityCode) ? 'amendTableData' : 'amendEntityData'}/${entityCode}/${amendType}`,
-            { record, idFilterString },
-            'POST'
-        );
-        return response;
-    } catch (error) {
-        useGlobalStore.setState({ error: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
+        const response = await fetchCall(`/entity/getEntityRecord/${entityCode}/${keyFieldsValue}`);
+        set({ record: response.data });
+    }
+    catch (error) {
+        useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
     }
 }
 
-export const searchRelatedTableRecord = async (entityCode, searchTerm = '') => {
+export const amendEntity = async (entityCode, record, amendType) => {
     try {
         const response = await fetchCall(
-            `/${isNumeric(entityCode) ? 'searchTableData' : 'searchEntityData'}/${entityCode}`,
-            { searchTerm },
+            `/entity/amendEntity/${entityCode}/${amendType}`,
+            { record },
             'POST'
         );
         return response;

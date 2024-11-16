@@ -1,10 +1,10 @@
-import { usePageStore, useGlobalStore, selectFields } from "../stores";
+import { useGlobalStore, selectFields } from "../stores";
 import { mapFieldstoRecord } from "../helpers";
 import { amendEntity } from "../services/entitySvc";
 import { v4 as uuidv4 } from 'uuid';
 
-export const useAddRecord = (selectedEntityCode) => {
-    const { record, updateDisabled, setShowCard, setUpdateDisabled, insertFormValid } = usePageStore();
+export const useAddRecord = (useCardPageStore, selectedEntityCode) => {
+    const { record, updateDisabled, setShowCard, setUpdateDisabled, insertFormValid } = useCardPageStore();
     const { setError, setRowIndex, setLoading, setPageIndex, setAlert, setReload, quickAdd, setQuickAdd } = useGlobalStore();
     const fields = useGlobalStore(selectFields(selectedEntityCode));
 

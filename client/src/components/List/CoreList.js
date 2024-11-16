@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, Fragment } from 'react';
-import { useGlobalStore, usePageStore, selectFields, selectEntity } from '../../stores';
+import { useGlobalStore, selectFields, selectEntity } from '../../stores';
 import { useCancelRecordAction } from '../../hooks/cancelRecordActionHook';
 import { useUpdateRecord } from '../../hooks/updateRecordHook';
 import { useDeleteRecord } from '../../hooks/deleteRecordHook';
@@ -11,12 +11,12 @@ import AddRecordFieldCore from '../Card/AddRecordFieldCore';
 import { v4 as uuidv4 } from 'uuid';
 import { isFormValid } from '../../helpers';
 
-const CoreList = ({ records, setRecords, pageCount, pageIndex, setPageIndex, selectedEntityCode }) => {
+const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex, setPageIndex, selectedEntityCode }) => {
     const [record, setRecord] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [fieldValidity, setFieldValidity] = useState({});
     const dropdownRef = useRef(null);
-    const { setShowCard, searchError, setSearchError, setInsertFormValid } = usePageStore();
+    const { setShowCard, searchError, setSearchError, setInsertFormValid } = useListPageStore();
     const { rowIndex, setRowIndex, loading, quickEdit, setQuickEdit, setAlert, quickAdd, setQuickAdd } = useGlobalStore();
     const fields = useGlobalStore(selectFields(selectedEntityCode));
     const entity = useGlobalStore(selectEntity(selectedEntityCode));
