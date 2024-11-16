@@ -20,12 +20,12 @@ export const List = ({ useListPageStore }) => {
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
     useEffect(() => {
-        loadRecords(pageMetadata.entityCode, view);
+        loadRecords(pageMetadata.entity, view);
         window.scrollTo(0, 0);
     }, [pageIndex, selectedPage, view]);
 
     return (
-        <CoreList useListPageStore={useListPageStore} records={records} pageIndex={pageIndex} setPageIndex={setPageIndex} entityCode={pageMetadata.entityCode} />
+        <CoreList useListPageStore={useListPageStore} />
     );
 }
 

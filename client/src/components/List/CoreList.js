@@ -6,16 +6,30 @@ import Loader from '../Loader/Loader';
 import FieldCore from '../Card/FieldCore';
 import AddRecordFieldCore from '../Card/AddRecordFieldCore';
 import { v4 as uuidv4 } from 'uuid';
-import { isFormValid } from '../../helpers';
 
-const CoreList = ({ useListPageStore, records, pageIndex, setPageIndex, entityCode }) => {
+const CoreList = ({ useListPageStore }) => {
+    const { setAlert, pages, selectedPage } = useGlobalStore();
+    const {
+        records,
+        recordsLoading,
+        rowIndex,
+        setRowIndex,
+        pageIndex,
+        quickEdit,
+        setQuickEdit,
+        quickAdd,
+        setQuickAdd
+    } = useListPageStore();
+
+    const pageMetadata = pages.find(page => page.id === selectedPage);
+
     const [record, setRecord] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [fieldValidity, setFieldValidity] = useState({});
     const dropdownRef = useRef(null);
-    const { rowIndex, setRowIndex, loading, quickEdit, setQuickEdit, setAlert, quickAdd, setQuickAdd } = useGlobalStore();
-    const fields = useGlobalStore(selectFields(entityCode));
-    const entity = useGlobalStore(selectEntity(entityCode));
+    
+    const fields = useGlobalStore(selectFields(pageMetadata.entityCode));
+    const entity = useGlobalStore(selectEntity(pageMetadata.entityCode));
     //const handleCancelQuickEditHook = useCancelRecordAction(entityCode);
     //const handleUpdateRecordQuickEditHook = useUpdateRecord(entityCode);
     //const handleAddRecordQuickModeHook = useAddRecord(entityCode);
@@ -187,7 +201,7 @@ const CoreList = ({ useListPageStore, records, pageIndex, setPageIndex, entityCo
                     }
                 </>
             }
-            {loading ? (
+            {recordsLoading ? (
                 <Loader />
             ) : (
                 <div className="w3-center w3-padding mt-3">

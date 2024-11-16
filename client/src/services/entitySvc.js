@@ -17,8 +17,14 @@ export const loadEntities = async (set) => {
 export const loadRecords = async (set, get, entityCode, view) => {
     try {
         set({ recordsLoading: true });
-        const response = await fetchCall(`/entity/getEntityRecords/${entityCode}/${view}/${get.pageIndex || 1}`);
-        set({ records: [...response.data] });
+        const response = await fetchCall(`/entity/getEntityRecords/${entityCode}/${view}/${get.pageIndex || 1}`,{
+            view
+        }, 'POST');
+        set({ 
+            records: [...response.data.records],
+            paging: response.data.paging,
+            actualEntityCode: response.data.entityCode
+         });
         set({ recordsLoading: false });
     }
     catch (error) {

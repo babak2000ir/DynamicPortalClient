@@ -30,6 +30,12 @@ export const listPageStore = devtools((set, get) => ({
     //Entity
     recordsLoading: false,
     records: [],
+    actualEntityCode: '',
+    paging: { 
+        pageIndex: 1, 
+        pageCount: 0, 
+        pageSize: 10 
+    },
     loadRecords: (entityCode, view) => loadRecords(set, get, entityCode, view),
 
     //Page State
