@@ -8,8 +8,8 @@ export const getEntities = async (ctx) => {
 export const getEntityRecords = async (ctx) => {
     ctx.body = await bcOperation('getEntityRecords', {
         pEntityCode: ctx.params.entityCode,
-        pView: ctx.params.view,
-        pPageSzie: appState.pageSize,
+        pView: ctx.request.body?.view || '',
+        pPageSize: appState.pageSize,
         pPageIndex: ctx.params.pageIndex
     });
 };
