@@ -16,8 +16,10 @@ export const loadEntities = async (set) => {
 
 export const loadRecords = async (set, get, entityCode, view) => {
     try {
+        set({ recordsLoading: true });
         const response = await fetchCall(`/entity/getEntityRecords/${entityCode}/${view}/${get.pageIndex || 1}`);
         set({ records: [...response.data] });
+        set({ recordsLoading: false });
     }
     catch (error) {
         useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });

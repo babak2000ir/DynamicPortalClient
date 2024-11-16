@@ -2,27 +2,30 @@ import { useEffect, useState } from 'react';
 import { useGlobalStore } from '../../stores';
 import CoreList from './CoreList';
 
-export const List = ({ useListPageStore, selectedEntityCode }) => {
-    const [records, setRecords] = useState([]);
-    const { loadEntity, showRelatedTable } = useListPageStore();
-    const { setRowIndex, setLoading, setPageIndex, loading, pageIndex, reload } = useGlobalStore();
-    const entityData = useListPageStore(state => state.entityCollection[selectedEntityCode]);
+export const List = ({ useListPageStore }) => {
+    const { pages, selectedPage } = useGlobalStore();
+    const {
+        records,
+        loadRecords,
+        rowIndex,
+        setRowIndex,
+        pageIndex,
+        setPageIndex,
+        quickEdit,
+        setQuickEdit,
+        quickAdd,
+        setQuickAdd
+    } = useListPageStore();
+    const [view , setView] = useState('');
+    const pageMetadata = pages.find(page => page.id === selectedPage);
 
     useEffect(() => {
-        const load = async () => {
-            const res = await loadEntity(selectedEntityCode, pageIndex);
-            setLoading(false);
-            setRowIndex(0);
-            setRecords(res?.records);
-        }
-        if (selectedEntityCode && selectedEntityCode !== '0' && loading && !showRelatedTable) {
-            load();
-        }
+        loadRecords(pageMetadata.entityCode, view);
         window.scrollTo(0, 0);
-    }, [pageIndex, selectedEntityCode, records, reload]);
+    }, [pageIndex, selectedPage, view]);
 
     return (
-        <CoreList records={records} setRecords={setRecords} pageCount={entityData?.paging?.pageCount} pageIndex={pageIndex} setPageIndex={setPageIndex} selectedEntityCode={selectedEntityCode} />
+        <CoreList useListPageStore={useListPageStore} records={records} pageIndex={pageIndex} setPageIndex={setPageIndex} entityCode={pageMetadata.entityCode} />
     );
 }
 

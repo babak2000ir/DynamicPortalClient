@@ -5,7 +5,7 @@ import { Dashboard } from './Dashboard';
 import { Page } from './Page';
 
 const Main = () => {
-    const { entitiesLoaded, pagesLoaded, selectedPage } = useGlobalStore()
+    const { pagesLoaded, selectedPage } = useGlobalStore()
 
     //const loadedPage = useGlobalStore(state => state.loadedPage);
     //const loadedPageParams = useGlobalStore(state => state.loadedPageParams);
@@ -25,8 +25,8 @@ const Main = () => {
             <Suspense fallback={<Spinner />}>
                 <div className="w3-row">
                     {/* <MainSection  {...loadedPageParams} /> */}
-                    {entitiesLoaded && pagesLoaded && selectedPage ?
-                        <Dashboard />:<Page />
+                    {selectedPage ?
+                        <Page /> : <Dashboard />
                     }
                 </div>
             </Suspense>

@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef, Fragment } from 'react';
 import { useGlobalStore, selectFields, selectEntity } from '../../stores';
-import { useCancelRecordAction } from '../../hooks/cancelRecordActionHook';
-import { useUpdateRecord } from '../../hooks/updateRecordHook';
 import { useDeleteRecord } from '../../hooks/deleteRecordHook';
-import { useAddRecord } from '../../hooks/addRecordHook';
 import Pagination from '../Pagination';
 import Loader from '../Loader/Loader';
 import FieldCore from '../Card/FieldCore';
@@ -11,18 +8,17 @@ import AddRecordFieldCore from '../Card/AddRecordFieldCore';
 import { v4 as uuidv4 } from 'uuid';
 import { isFormValid } from '../../helpers';
 
-const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex, setPageIndex, selectedEntityCode }) => {
+const CoreList = ({ useListPageStore, records, pageIndex, setPageIndex, entityCode }) => {
     const [record, setRecord] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [fieldValidity, setFieldValidity] = useState({});
     const dropdownRef = useRef(null);
-    const { setShowCard, searchError, setSearchError, setInsertFormValid } = useListPageStore();
     const { rowIndex, setRowIndex, loading, quickEdit, setQuickEdit, setAlert, quickAdd, setQuickAdd } = useGlobalStore();
-    const fields = useGlobalStore(selectFields(selectedEntityCode));
-    const entity = useGlobalStore(selectEntity(selectedEntityCode));
-    const handleCancelQuickEditHook = useCancelRecordAction(selectedEntityCode);
-    const handleUpdateRecordQuickEditHook = useUpdateRecord(selectedEntityCode);
-    const handleAddRecordQuickModeHook = useAddRecord(selectedEntityCode);
+    const fields = useGlobalStore(selectFields(entityCode));
+    const entity = useGlobalStore(selectEntity(entityCode));
+    //const handleCancelQuickEditHook = useCancelRecordAction(entityCode);
+    //const handleUpdateRecordQuickEditHook = useUpdateRecord(entityCode);
+    //const handleAddRecordQuickModeHook = useAddRecord(entityCode);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -37,7 +33,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     }, []);
 
     useEffect(() => {
-        if (fields) setInsertFormValid(isFormValid(fields, fieldValidity));
+        //if (fields) setInsertFormValid(isFormValid(fields, fieldValidity));
     }, [fieldValidity]);
 
     // Select a record on list
@@ -51,7 +47,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     // Click the edit button on list row
     const handelRowEdit = (r) => {
         if (!quickEdit && !quickAdd) {
-            setShowCard(true, r, { setRecord, setRecords, records, initialRecord: r });
+            //setShowCard(true, r, { setRecord, setRecords, records, initialRecord: r });
         }
     }
 
@@ -67,7 +63,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     const handleOptionEdit = () => {
         if (!quickEdit && records) {
             const recordData = determineRecordData();
-            setShowCard(true, recordData, { setRecord, setRecords, records, initialRecord: recordData });
+            //setShowCard(true, recordData, { setRecord, setRecords, records, initialRecord: recordData });
         }
     }
 
@@ -75,7 +71,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     const handleOptionQuickEdit = () => {
         if (!quickEdit && records) {
             const recordData = determineRecordData();
-            setShowCard(false, recordData, { setRecord, setRecords, records, initialRecord: recordData });
+            //setShowCard(false, recordData, { setRecord, setRecords, records, initialRecord: recordData });
             setQuickEdit(!quickEdit);
             setAlert({ id: uuidv4(), message: 'Quick edit mode active', type: 'info' });
         }
@@ -84,19 +80,17 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     // Cancel the quick edit mode
     const handleCancelQuickEdit = () => {
         setQuickEdit(!quickEdit);
-        setSearchError('');
-        handleCancelQuickEditHook();
+        //handleCancelQuickEditHook();
     }
 
     // Update record (row) in quick edit mode
     const handleUpdateRecordQuickEdit = () => {
         setQuickEdit(!quickEdit);
-        setSearchError('');
-        handleUpdateRecordQuickEditHook();
+        //handleUpdateRecordQuickEditHook();
     }
 
     // Click the delete button on the options controls
-    const deleteHandler = useDeleteRecord(pageIndex, records, setRecords, selectedEntityCode, determineRecordData());
+    const deleteHandler = useDeleteRecord(pageIndex, records, determineRecordData());
     const handleDelete = () => {
         if (!quickEdit && records) {
             deleteHandler();
@@ -110,9 +104,9 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
         if (option === 'list') {
             setQuickAdd(true);
             records ? setRowIndex(records.length) : setRowIndex(0);
-            setShowCard(false, [], { setRecord, setRecords, records: [], initialRecord: [], isInsert: true });
+            //setShowCard(false, [], { setRecord, setRecords, records: [], initialRecord: [], isInsert: true });
         } else if (option === 'card') {
-            setShowCard(true, [], { setRecord, setRecords, records: [], initialRecord: [], isInsert: true });
+            //setShowCard(true, [], { setRecord, setRecords, records: [], initialRecord: [], isInsert: true });
         }
     };
 
@@ -128,12 +122,12 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
     const handleCancelQuickAdd = () => {
         setQuickAdd(false);
         setRowIndex(0);
-        handleCancelQuickEditHook();
+        //handleCancelQuickEditHook();
     }
 
     // Add record (row) in quick mode
     const handleQuickAddRecord = () => {
-        handleAddRecordQuickModeHook();
+        //handleAddRecordQuickModeHook();
     }
 
     return (
@@ -186,7 +180,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
                             </div>}
                         </div>
                     </div>
-                    {searchError &&
+                    {
                         <div className='py-1 px-4 bg-red-100 border-b border-red-400 flex items-center text-md mx-4'>
                             <p><i className="fa-solid fa-circle-exclamation text-red-700"></i> The page has an error.</p>
                         </div>
@@ -254,7 +248,7 @@ const CoreList = ({ useListPageStore, records, setRecords, pageCount, pageIndex,
                             </tbody>
                         </table>}
                     </div>
-                    <Pagination pageCount={pageCount} pageIndex={pageIndex} setPageIndex={setPageIndex} />
+                    <Pagination useListPageStore={useListPageStore} />
                 </div>
             )
             }

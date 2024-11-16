@@ -5,7 +5,7 @@ import { Card } from "./Card/Card";
 
 export const Page = () => {
     const { selectedPage, pages } = useGlobalStore();
-    const pageType = pages.filter(page => page.id === selectedPage).type;
+    const pageType = pages.find(page => page.id === selectedPage).type;
 
     switch (pageType) {
         case 'list':

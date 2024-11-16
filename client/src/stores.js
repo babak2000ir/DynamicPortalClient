@@ -30,23 +30,17 @@ export const listPageStore = devtools((set, get) => ({
     //Entity
     recordsLoading: false,
     records: [],
-    loadRecords: (entityCode, view) => loadRecords(set,get, entityCode, view),
+    loadRecords: (entityCode, view) => loadRecords(set, get, entityCode, view),
 
     //Page State
     rowIndex: 0,
     setRowIndex: (rowIndex) => set({ rowIndex }),
-    pageIndex: 1,   
+    pageIndex: 1,
     setPageIndex: (pageIndex) => set({ pageIndex }),
     quickEdit: false,
     setQuickEdit: (quickEdit) => set({ quickEdit }),
     quickAdd: false,
     setQuickAdd: (quickAdd) => set({ quickAdd }),
-
-    loadedPage: 'Dashboard',
-    loadedPageParams: {},
-    loading: false,
-    relatedTableLoading: false,
-    recordRelationsLoading: false,
 
 }), 'listPageStore');
 

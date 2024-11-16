@@ -1,22 +1,22 @@
 import React from 'react';
 import { useGlobalStore } from '../stores';
 
-const Pagination = ({ useListPageStore, pageCount, pageIndex, setPageIndex }) => {
-    const { showRelatedTable } = useListPageStore();
-    const { setLoading, quickEdit, quickAdd, setRelatedTableLoading } = useGlobalStore();
-    const setLoadingFunction = showRelatedTable ? setRelatedTableLoading : setLoading;
+const Pagination = ({ useListPageStore }) => {
+    const { records, pageIndex, setPageIndex, loadRecords } = useListPageStore();
+
+    const pageCount = records.pageCount;
 
     return (
         <div className="pagination w3-bar w3-border w3-round mt-7">
             {pageCount > 1 &&
                 <>
-                    <PaginationButton paginationAction={() => { setPageIndex(1); setLoadingFunction(true) }} disabled={pageIndex === 1 || ((quickEdit || quickAdd) && !showRelatedTable)}>&laquo;</PaginationButton>
-                    <PaginationButton paginationAction={() => { setPageIndex(pageIndex - 1 || 1); setLoadingFunction(true) }} disabled={pageIndex === 1 || ((quickEdit || quickAdd) && !showRelatedTable)}>&lsaquo;</PaginationButton>
+                    <PaginationButton paginationAction={() => { setPageIndex(1); loadRecords() }} disabled={pageIndex === 1}>&laquo;</PaginationButton>
+                    <PaginationButton paginationAction={() => { setPageIndex(pageIndex - 1 || 1); loadRecords(true) }} disabled={pageIndex === 1}>&lsaquo;</PaginationButton>
                 </>
             }
             {pageCount <= 10 &&
                 [...Array(pageCount).keys()].map((n, i) =>
-                    <PaginationButton key={n} paginationAction={() => { setPageIndex(n + 1); setLoadingFunction(true) }} disabled={n + 1 === pageIndex || ((quickEdit || quickAdd) && !showRelatedTable)}>{n + 1}</PaginationButton>
+                    <PaginationButton key={n} paginationAction={() => { setPageIndex(n + 1); loadRecords(true) }} disabled={n + 1 === pageIndex}>{n + 1}</PaginationButton>
                 )
             }
             {pageCount > 10 &&
@@ -25,11 +25,11 @@ const Pagination = ({ useListPageStore, pageCount, pageIndex, setPageIndex }) =>
                         <PaginationButton disabled>...</PaginationButton>
                     }
                     {pageIndex - 1 !== 0 &&
-                        <PaginationButton paginationAction={() => { setPageIndex(pageIndex - 1); setLoadingFunction(true) }} disabled={(quickEdit || quickAdd) && !showRelatedTable}>{pageIndex - 1}</PaginationButton>
+                        <PaginationButton paginationAction={() => { setPageIndex(pageIndex - 1); loadRecords(true) }} >{pageIndex - 1}</PaginationButton>
                     }
-                    <PaginationButton disabled={(quickEdit || quickAdd) && !showRelatedTable}>{pageIndex}</PaginationButton>
+                    <PaginationButton>{pageIndex}</PaginationButton>
                     {pageIndex + 1 <= pageCount &&
-                        <PaginationButton paginationAction={() => { setPageIndex(pageIndex + 1); setLoadingFunction(true) }} disabled={(quickEdit || quickAdd) && !showRelatedTable}>{pageIndex + 1}</PaginationButton>
+                        <PaginationButton paginationAction={() => { setPageIndex(pageIndex + 1); loadRecords(true) }}>{pageIndex + 1}</PaginationButton>
                     }
                     {pageIndex < pageCount - 1 &&
                         <PaginationButton disabled>...</PaginationButton>
@@ -38,8 +38,8 @@ const Pagination = ({ useListPageStore, pageCount, pageIndex, setPageIndex }) =>
             }
             {pageCount > 1 &&
                 <>
-                    <PaginationButton paginationAction={() => { setPageIndex(pageIndex + 1 > pageCount ? pageIndex : pageIndex + 1); setLoadingFunction(true) }} disabled={pageIndex === pageCount || ((quickEdit || quickAdd) && !showRelatedTable)}>&rsaquo;</PaginationButton>
-                    <PaginationButton paginationAction={() => { setPageIndex(pageCount); setLoadingFunction(true) }} disabled={pageIndex === pageCount || ((quickEdit || quickAdd) && !showRelatedTable)}>&raquo;</PaginationButton>
+                    <PaginationButton paginationAction={() => { setPageIndex(pageIndex + 1 > pageCount ? pageIndex : pageIndex + 1); loadRecords(true) }} disabled={pageIndex === pageCount}>&rsaquo;</PaginationButton>
+                    <PaginationButton paginationAction={() => { setPageIndex(pageCount); loadRecords(true) }} disabled={pageIndex === pageCount}>&raquo;</PaginationButton>
                 </>
             }
         </div>
