@@ -1,0 +1,19 @@
+{
+    "id": "f78c2bdc-35fd-410d-ab0b-6dc507276424",
+    "entity": "CURRENCY",
+    "title": "Currency List",
+    "create": {
+        "listCreate": true,
+        "cardCreate": true
+    },
+    "read": true,
+    "update": {
+        "listUpdate": true,
+        "cardUpdate": true
+    },
+    "delete": true,
+    "paging":{
+        "pageSize": 20,
+        "pagination": true
+    }
+}

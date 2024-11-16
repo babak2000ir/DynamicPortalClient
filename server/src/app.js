@@ -3,33 +3,15 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';
 import { __dirname } from './config.js';
-import router from './routes/apiRoutes.js';
+import router from './routes/route-manager.js';
 import logger from './middlewares/logger.js';
 import responseTime from './middlewares/responseTime.js';
 import requestLogger from './middlewares/requestLogger.js';
-import ratelimit from 'koa-ratelimit';
 import helmet from 'koa-helmet';
-import { initApp, appState } from './services/businessCentralService.js';
-
+import { initApp } from './services/entitySvc.js';
 
 const app = new Koa();
 const port = process.env.port || 8080;
-
-// Rate limiting middleware
-app.use(ratelimit({
-  driver: 'memory',
-  db: new Map(),
-  duration: 60000, // 1 minute
-  errorMessage: { error: 'Slow down your requests.' },
-  id: (ctx) => ctx.ip, // Identify the client by IP address
-  headers: {
-    remaining: 'Rate-Limit-Remaining',
-    reset: 'Rate-Limit-Reset',
-    total: 'Rate-Limit-Total'
-  },
-  max: 100, // Limit each IP to 100 requests per duration
-  disableHeader: false,
-}));
 
 app.use(helmet({
   contentSecurityPolicy: {
@@ -67,11 +49,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(serve(path.join(__dirname, '../../dist/client')));
 }
 
-
-
 initApp()
   .then(() => {
-    appState.initComplete = true;
     console.log('Init Completed.');
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}`);
@@ -80,6 +59,3 @@ initApp()
   .catch((error) => {
     console.log(`Initialization error: ${error}`);
   });
-
-console.log(`Server is running`);
-
