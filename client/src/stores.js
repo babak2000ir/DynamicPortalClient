@@ -8,7 +8,7 @@ export const useGlobalStore = create(devtools(set => ({
     //UI
     showSidebar: true,
     setShowSidebar: (showSidebar) => set({ showSidebar }),
-    
+
     //Global Data
     entitiesLoading: false,
     entities: [],
@@ -32,23 +32,48 @@ export const useGlobalStore = create(devtools(set => ({
 
 }), 'globalStore'));
 
+export const PageMode = {
+    View: 0,
+    Edit: 1,
+    New: 2
+};
+
 export const listPageStore = devtools((set, get) => ({
     //Entity
     recordsLoading: false,
     records: [],
     actualEntityCode: '',
-    paging: { 
-        pageIndex: 1, 
-        pageCount: 0, 
-        pageSize: 10 
+    paging: {
+        pageIndex: 1,
+        pageCount: 0,
+        pageSize: 10
     },
     loadRecords: (entityCode, view) => loadRecords(set, get, entityCode, view),
 
     //Page State
-    rowIndex: 0,
-    setRowIndex: (rowIndex) => set({ rowIndex }),
+    selectedRecord: [],
+    selectedRecordKey: '',
+    setSelectedRecordKey: (selectedRecord) => {
+        set({ selectedRecord });
+
+        let keyFieldsValue = '';
+        const entity = useGlobalStore.getState().entities.find(e => e.entityCode === get().actualEntityCode);
+        if (entity) {
+            entity.fields.filter(f => f.partOfPrimaryKey).forEach(f => {
+                if (!keyFieldsValue) 
+                    keyFieldsValue = `where(${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`
+                else
+                    keyFieldsValue += `,${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`;
+            });
+            keyFieldsValue += ')';
+        }
+
+        set({ selectedRecordKey: keyFieldsValue })
+    },
     pageIndex: 1,
     setPageIndex: (pageIndex) => set({ pageIndex }),
+    pageMode: PageMode.View,
+    setPageMode: (pageMode) => set({ pageMode }),
 
 }), 'listPageStore');
 

@@ -13,13 +13,17 @@ export const Page = () => {
             window.useListPageStore = useListPageStore;
             return (
                 <div className='w3-col m12'>
-                    <List useListPageStore = {useListPageStore} />
+                    <List useListPageStore={useListPageStore} />
                 </div>
             );
         case 'card':
             const useCardPageStore = create(cardPageStore);
             window.useCardPageStore = useCardPageStore;
-            return (<Card useCardPageStore={useCardPageStore} />);
+            return (
+                <div className='w3-col m12'>
+                    <Card useCardPageStore={useCardPageStore} />
+                </div>
+            );
         default:
             return (
                 <div className='w3-col m12'>

@@ -14,6 +14,8 @@ const App = () => {
     loadPages();
   }, []);
 
+  //TOTO - clean up all store selectiors, store access
+
   return (
     <Router>
       <NavBar />
