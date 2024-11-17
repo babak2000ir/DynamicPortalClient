@@ -15,14 +15,14 @@ export const getEntityRecords = async (ctx) => {
 };
 
 export const getEntityRecord = async (ctx) => {
-    ctx.body = await routeHandler('EntityData', {
+    ctx.body = await bcOperation('getEntityRecord', {
         pEntityCode: ctx.params.entityCode,
-        pKeyFieldsValue: ctx.params.keyFieldsValue
+        pKeyFieldsValue: ctx.params.keyFieldsValue || ''
     });
 };
 
 export const entityAmend = async (ctx) => {
-    ctx.body = await routeHandler('EntityDataAmend', {
+    ctx.body = await bcOperation('EntityDataAmend', {
         pEntityCode: ctx.params.entityCode,
         pAmendType: ctx.params.amendType,
         pRecord: ctx.request.body
