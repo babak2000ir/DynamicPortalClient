@@ -3,26 +3,18 @@ import { useGlobalStore } from '../../stores';
 import CoreList from './CoreList';
 
 export const List = ({ useListPageStore }) => {
-    const { pages, selectedPage } = useGlobalStore();
+    const { pages, selectedPage, view } = useGlobalStore();
     const {
-        records,
         loadRecords,
-        rowIndex,
-        setRowIndex,
-        pageIndex,
-        setPageIndex,
-        quickEdit,
-        setQuickEdit,
-        quickAdd,
-        setQuickAdd
+        pageIndex
     } = useListPageStore();
-    const [view , setView] = useState('');
+
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
     useEffect(() => {
         loadRecords(pageMetadata.entity, view);
         window.scrollTo(0, 0);
-    }, [pageIndex, selectedPage, view]);
+    }, [pageIndex, pageMetadata, view]);
 
     return (
         <CoreList useListPageStore={useListPageStore} />

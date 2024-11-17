@@ -1,9 +1,18 @@
 import React from 'react';
 import FieldCore from './FieldCore';
+import { useGlobalStore, selectFields } from '../../stores';
 
-const FieldControl = ({ f, fInfo, fields }) => {
+const FieldControl = ({ useCardPageStore, fieldIdx }) => {
     const labelSpan = '3';
     const inputSpan = '9';
+
+    const { pages, selectedPage } = useGlobalStore();
+
+    const pageMetadata = pages.find(page => page.id === selectedPage);
+
+    const fields = useGlobalStore(selectFields(pageMetadata.entity));
+
+    const fInfo=fields[fieldIdx];
 
     return (
         <div className='w3-row'>
@@ -12,7 +21,7 @@ const FieldControl = ({ f, fInfo, fields }) => {
             </div>
             <div className={`w3-col m${inputSpan} w3-right-align w3-padding-small form-wrapper`}>
                 {fInfo.partOfPrimaryKey && <i className="bi bi-key"></i>}
-                <FieldCore f={f} fInfo={fInfo} fields={fields} />
+                <FieldCore useCardPageStore={useCardPageStore} fieldIdx={fieldIdx} />
             </div>
         </div>
     )

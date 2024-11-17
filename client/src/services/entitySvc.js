@@ -34,8 +34,14 @@ export const loadRecords = async (set, get, entityCode, view) => {
 
 export const loadRecord = async (set, entityCode, keyFieldsValue) => {
     try {
+        set({ recordLoading: true });
         const response = await fetchCall(`/entity/getEntityRecord/${entityCode}/${keyFieldsValue}`);
-        set({ record: response.data });
+        set({ 
+            record: response.data.record,
+            actualEntityCode: response.data.entityCode
+        });
+        set({ recordLoading: false });
+        
     }
     catch (error) {
         useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });

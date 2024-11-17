@@ -8,9 +8,7 @@ export const useGlobalStore = create(devtools(set => ({
     //UI
     showSidebar: true,
     setShowSidebar: (showSidebar) => set({ showSidebar }),
-    selectedPage: null,
-    setSelectedPage: (selectedPage) => set({ selectedPage }),
-
+    
     //Global Data
     entitiesLoading: false,
     entities: [],
@@ -23,6 +21,14 @@ export const useGlobalStore = create(devtools(set => ({
     setAlert: (newAlert) => set((state) => ({ alerts: [...state.alerts, newAlert] })),
     supressAlert: (alertId) => set((state) => ({ alerts: state.alerts.map((alert) => alert.id === alertId ? { ...alert, supressed: true } : alert) })),
     removeAlert: (alertId) => set((state) => ({ alerts: state.alerts.filter((alert) => alert.id !== alertId) })),
+
+    //Page Stak
+    selectedPage: null,
+    setSelectedPage: (selectedPage) => set({ selectedPage }),
+    view: '',
+    setView: (view) => set({ view }),
+    keyFieldsValue: '',
+    setKeyFieldsValue: (keyFieldsValue) => set({ keyFieldsValue }),
 
 }), 'globalStore'));
 
@@ -43,17 +49,17 @@ export const listPageStore = devtools((set, get) => ({
     setRowIndex: (rowIndex) => set({ rowIndex }),
     pageIndex: 1,
     setPageIndex: (pageIndex) => set({ pageIndex }),
-    quickEdit: false,
-    setQuickEdit: (quickEdit) => set({ quickEdit }),
-    quickAdd: false,
-    setQuickAdd: (quickAdd) => set({ quickAdd }),
 
 }), 'listPageStore');
 
 export const cardPageStore = devtools((set, get) => ({
+    //UI
+    numberOfColumns: 2,
+
     recordLoading: false,
     record: [],
-    loadRecord: () => loadRecord(set),
+    loadRecord: (entityCode, keyFieldsValue) => loadRecord(set, entityCode, keyFieldsValue),
+
 }), 'cardPageStore');
 
 //Selectors

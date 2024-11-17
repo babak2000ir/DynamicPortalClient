@@ -23,16 +23,13 @@ const CoreList = ({ useListPageStore }) => {
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
-    const [record, setRecord] = useState([]);
+    const [selectedRecord, setSelectedRecord] = useState([]);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [fieldValidity, setFieldValidity] = useState({});
     const dropdownRef = useRef(null);
-    
-    const fields = useGlobalStore(selectFields(pageMetadata.entityCode));
-    const entity = useGlobalStore(selectEntity(pageMetadata.entityCode));
-    //const handleCancelQuickEditHook = useCancelRecordAction(entityCode);
-    //const handleUpdateRecordQuickEditHook = useUpdateRecord(entityCode);
-    //const handleAddRecordQuickModeHook = useAddRecord(entityCode);
+
+    const fields = useGlobalStore(selectFields(pageMetadata.entity));
+    const entity = useGlobalStore(selectEntity(pageMetadata.entity));
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -54,7 +51,7 @@ const CoreList = ({ useListPageStore }) => {
     const handleRowSelect = (idx, r) => {
         if (!quickEdit && !quickAdd) {
             setRowIndex(idx);
-            setRecord(r);
+            setSelectedRecord(r);
         }
     }
 
@@ -65,18 +62,10 @@ const CoreList = ({ useListPageStore }) => {
         }
     }
 
-    const determineRecordData = () => {
-        if (rowIndex === 0) {
-            return records && records[0];
-        } else {
-            return record;
-        }
-    };
-
     // Click the edit button on the options controls
     const handleOptionEdit = () => {
         if (!quickEdit && records) {
-            const recordData = determineRecordData();
+            //const recordData = determineRecordData();
             //setShowCard(true, recordData, { setRecord, setRecords, records, initialRecord: recordData });
         }
     }
@@ -84,7 +73,7 @@ const CoreList = ({ useListPageStore }) => {
     // Click the quick edit button on the options controls
     const handleOptionQuickEdit = () => {
         if (!quickEdit && records) {
-            const recordData = determineRecordData();
+            //const recordData = determineRecordData();
             //setShowCard(false, recordData, { setRecord, setRecords, records, initialRecord: recordData });
             setQuickEdit(!quickEdit);
             setAlert({ id: uuidv4(), message: 'Quick edit mode active', type: 'info' });
@@ -104,7 +93,7 @@ const CoreList = ({ useListPageStore }) => {
     }
 
     // Click the delete button on the options controls
-    const deleteHandler = useDeleteRecord(pageIndex, records, determineRecordData());
+    const deleteHandler = useDeleteRecord(pageIndex, records, null);
     const handleDelete = () => {
         if (!quickEdit && records) {
             deleteHandler();
@@ -194,11 +183,6 @@ const CoreList = ({ useListPageStore }) => {
                             </div>}
                         </div>
                     </div>
-                    {
-                        <div className='py-1 px-4 bg-red-100 border-b border-red-400 flex items-center text-md mx-4'>
-                            <p><i className="fa-solid fa-circle-exclamation text-red-700"></i> The page has an error.</p>
-                        </div>
-                    }
                 </>
             }
             {recordsLoading ? (
