@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import { useGlobalStore } from '../stores';
-import Alert from './Alert/Alert';
 import { Dashboard } from './Dashboard';
 import { Page } from './Page';
 
@@ -14,9 +13,6 @@ const Main = () => {
 
     return (
         <div className="w3-white">
-            <Suspense>
-                <Alert />
-            </Suspense>
             <Suspense fallback={<Spinner />}>
                 <div className="w3-row pt-2 pb-4 pl-4 pr-4 lg:sticky top-12 z-10">
                     {/* <ActionSection {...loadedPageParams} /> */}

@@ -1,4 +1,3 @@
-import { useGlobalStore } from '../stores';
 import { fetchCall } from './fetchSvc';
 
 export const loadPages = async (set) => {
@@ -6,6 +5,6 @@ export const loadPages = async (set) => {
         set({ pages: [...await fetchCall('/code/getPages')] });
     }
     catch (error) {
-        useGlobalStore.getState().setAlert({ type: 'error', message: (error.code && `${error.code}: ` + error.message) || JSON.stringify(error) });
+        return error;
     }
 }

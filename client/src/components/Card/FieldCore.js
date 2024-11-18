@@ -5,6 +5,7 @@ import SearchLoader from '../Loader/SearchLoader';
 import { useGlobalStore, selectFields } from '../../stores';
 
 const FieldCore = ({ useCardPageStore, fieldIdx }) => {
+
     const { pages, selectedPage, entities } = useGlobalStore();
     const { record } = useCardPageStore();
 

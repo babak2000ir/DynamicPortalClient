@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { loadEntities, loadRecords, loadRecord } from './services/entitySvc';
+import { loadEntities, loadRecords, loadRecord, amendEntity } from './services/entitySvc';
 import { loadPages } from './services/codeSvc';
 import { isNumeric } from './helpers';
 
-export const useGlobalStore = create(devtools(set => ({
+export const useGlobalStore = create(devtools((set, get) => ({
     //UI
     showSidebar: true,
     setShowSidebar: (showSidebar) => set({ showSidebar }),
@@ -12,15 +12,9 @@ export const useGlobalStore = create(devtools(set => ({
     //Global Data
     entitiesLoading: false,
     entities: [],
-    loadEntities: () => loadEntities(set),
+    loadEntities: async () => loadEntities(set),
     pages: [],
-    loadPages: () => loadPages(set),
-
-    //Application State
-    alerts: [],
-    setAlert: (newAlert) => set((state) => ({ alerts: [...state.alerts, newAlert] })),
-    supressAlert: (alertId) => set((state) => ({ alerts: state.alerts.map((alert) => alert.id === alertId ? { ...alert, supressed: true } : alert) })),
-    removeAlert: (alertId) => set((state) => ({ alerts: state.alerts.filter((alert) => alert.id !== alertId) })),
+    loadPages: async () => loadPages(set),
 
     //Page Stak
     selectedPage: null,
@@ -37,7 +31,7 @@ export const PageMode = {
     Edit: 1,
     New: 2
 };
-
+//TODO - replace actualEntityCode with proper selector from useGlobalStore
 export const listPageStore = devtools((set, get) => ({
     //Entity
     recordsLoading: false,
@@ -48,26 +42,34 @@ export const listPageStore = devtools((set, get) => ({
         pageCount: 0,
         pageSize: 10
     },
-    loadRecords: (entityCode, view) => loadRecords(set, get, entityCode, view),
+    loadRecords: async (entityCode, view) => loadRecords(set, get, entityCode, view),
+    deleteSelectedRecord: async () => amendEntity(set, get, 'delete'),
 
     //Page State
     selectedRecord: [],
     selectedRecordKey: '',
-    setSelectedRecordKey: (selectedRecord) => {
+    selectedRecordKeyValueArray: '',
+    setSelectedRecord: (selectedRecord) => {
         set({ selectedRecord });
 
         let keyFieldsValue = '';
+        let keyFieldsValueArray = [];
         const entity = useGlobalStore.getState().entities.find(e => e.entityCode === get().actualEntityCode);
         if (entity) {
             entity.fields.filter(f => f.partOfPrimaryKey).forEach(f => {
-                if (!keyFieldsValue) 
-                    keyFieldsValue = `where(${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`
-                else
+                if (!keyFieldsValue) {
+                    keyFieldsValue = `where(${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`;
+                    keyFieldsValueArray.push({ id: f.id, value: selectedRecord[entity.fields.indexOf(f)] });
+                }
+                else {
                     keyFieldsValue += `,${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`;
+                    keyFieldsValueArray.push({ id: f.id, value: selectedRecord[entity.fields.indexOf(f)] });
+                }
             });
             keyFieldsValue += ')';
         }
 
+        set({ selectedRecordKeyValueArray: keyFieldsValueArray });
         set({ selectedRecordKey: keyFieldsValue })
     },
     pageIndex: 1,

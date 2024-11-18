@@ -4,18 +4,20 @@ import Pagination from '../Pagination';
 import Loader from '../Loader/Loader';
 import FieldCore from '../Card/FieldCore';
 import AddRecordFieldCore from '../Card/AddRecordFieldCore';
+import { errorHandlingWrapper } from '../Alert/Alert';
 
-const CoreList = ({ useListPageStore }) => {
+const CoreList = ({ useListPageStore, setAlert }) => {
     const { pages, selectedPage } = useGlobalStore();
     const {
         records,
         recordsLoading,
         selectedRecord,
         selectedRecordKey,
-        setSelectedRecordKey,
+        setSelectedRecord,
         pageIndex,
         pageMode,
         setPageMode,
+        deleteSelectedRecord,
     } = useListPageStore();
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
@@ -26,7 +28,7 @@ const CoreList = ({ useListPageStore }) => {
     // Select a record on list
     const handleRowSelect = (record) => {
         if (pageMode === PageMode.View) {
-            setSelectedRecordKey(record);
+            setSelectedRecord(record);
         }
     }
 
@@ -45,9 +47,13 @@ const CoreList = ({ useListPageStore }) => {
     }
 
     // Click the delete button
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (pageMode === PageMode.View) {
-            //TODO - Delete the record
+            if (selectedRecordKey) {
+                if (window.confirm(`Are you sure you want to delete ${selectedRecord}`)) {
+                    await errorHandlingWrapper(deleteSelectedRecord, setAlert);
+                }
+            }
         }
     }
 
@@ -126,7 +132,7 @@ const CoreList = ({ useListPageStore }) => {
                                                 <td key={rIdx} className='!py-3 text-sm leading-loose' style={{ whiteSpace: 'nowrap' }}>
                                                     {
                                                         (pageMode === PageMode.Edit) && r === selectedRecord ? (
-                                                            <FieldCore f={fv} fInfo={fields[rIdx]} fields={fields} />
+                                                            <FieldCore useListPageStore={useListPageStore} fieldIdx={rIdx} />
                                                         ) : (
                                                             typeof (fv) === 'string' ? fv.substring(0, 80) : String(fv)
                                                         )
@@ -152,7 +158,7 @@ const CoreList = ({ useListPageStore }) => {
                                             <span className='pr-2'>{(pageIndex - 1) * 10}</span>
                                         </td>
                                         {fields.map((field, idx) => (
-                                            <td key={idx}><AddRecordFieldCore useListPageStore={useListPageStore} field={field}  /></td>
+                                            <td key={idx}><AddRecordFieldCore useListPageStore={useListPageStore} field={field} /></td>
                                         ))}
                                     </tr>
                                 }
@@ -161,8 +167,7 @@ const CoreList = ({ useListPageStore }) => {
                     </div>
                     <Pagination useListPageStore={useListPageStore} />
                 </div>
-            )
-            }
+            )}
         </>
     );
 }
