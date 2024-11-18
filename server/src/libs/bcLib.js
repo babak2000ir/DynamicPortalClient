@@ -17,6 +17,10 @@ export const bcOperation = async (func, body) => {
         headers: { 'Authorization': 'Bearer ' + auth.access_token }
     });
 
-    const responseData = JSON.parse(response.data.value);
+    let responseData = '';
+    
+    if (response?.data?.value) 
+        responseData = JSON.parse(response.data.value);
+
     return responseData;
 }

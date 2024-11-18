@@ -22,10 +22,10 @@ export const getEntityRecord = async (ctx) => {
 };
 
 export const entityAmend = async (ctx) => {
-    ctx.body = await bcOperation('EntityDataAmend', {
+    ctx.body = await bcOperation('EntityAmend', {
         pEntityCode: ctx.params.entityCode,
         pAmendType: ctx.params.amendType,
-        pRecord: ctx.request.body
+        pRecord: ctx.request.body?.record || '',
     });
 };
 
