@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobalStore } from '../../stores';
 
 const Sidebar = () => {
-    const { entitiesLoading, pagesLoaded, pages, selectedPage, setSelectedPage } = useGlobalStore()
+    const { entitiesLoading, pages, selectedPage, setSelectedPage } = useGlobalStore()
 
     const pagesClickHandler = (page) => {
         setSelectedPage(page.id);

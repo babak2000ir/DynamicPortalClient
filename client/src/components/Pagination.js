@@ -1,7 +1,8 @@
 import React from 'react';
+import { useGlobalStore } from '../stores';
 
-const Pagination = ({ useListPageStore }) => {
-    const { paging, pageIndex, setPageIndex } = useListPageStore();
+const Pagination = () => {
+    const { paging, pageIndex, setPageIndex } = useGlobalStore();
 
     return (
         <div className="pagination w3-bar w3-border w3-round mt-7">

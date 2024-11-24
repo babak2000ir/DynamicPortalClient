@@ -1,13 +1,11 @@
 
 import { useState, useEffect } from 'react';
-import { selectFields, useGlobalStore, selectEntity, selectRelations, selectRelatedEntityCode } from '../../stores';
+import { useGlobalStore, getEntity } from '../../stores';
 import CardGrid from './CardGrid';
-import RecordRelationsList from '../List/RecordRelationsList';
-import { mapPrimaryKeyFieldstoRecord } from '../../helpers';
 
-export const Card = ({ useCardPageStore }) => {
-    const { pages, selectedPage, keyFieldsValue } = useGlobalStore();
-    const { record, loadRecord } = useCardPageStore();
+export const Card = () => {
+    const { pages, selectedPage, keyFieldsValue, loadRecord } = useGlobalStore();
+    const entity = useGlobalStore(getEntity);
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
@@ -20,13 +18,11 @@ export const Card = ({ useCardPageStore }) => {
     const [tabIndex, setTabIndex] = useState(0);
     const { setRecordRelationsLoading } = useGlobalStore();
 
-    const entity = useGlobalStore(selectEntity(pageMetadata.entity));
-    const fields = useGlobalStore(selectFields(pageMetadata.entity));
 
-    const relations = useGlobalStore(selectRelations(pageMetadata.entity));
-    const relatedEntityCode = useGlobalStore(selectRelatedEntityCode(pageMetadata.entity));
+    //const relations = useGlobalStore(selectRelations(pageMetadata.entity));
+    //const relatedEntityCode = useGlobalStore(selectRelatedEntityCode(pageMetadata.entity));
 
-    const recordKey = record ? fields?.filter(f => f.partOfPrimaryKey).map(f => record[fields.indexOf(f)]).join(' - ') : null;
+    const recordKey = '';  //record ? fields?.filter(f => f.partOfPrimaryKey).map(f => record[fields.indexOf(f)]).join(' - ') : null;
 
     const handleRelationsTabClick = (idx) => {
         const lIdx = idx + 1;
@@ -49,7 +45,7 @@ export const Card = ({ useCardPageStore }) => {
 
                     <div className="w3-bar w3-border-bottom mb-6">
                         <button className={`tablink w3-bar-item w3-button ${tabIndex === 0 ? 'w3-light-grey' : ''}`} onClick={() => setTabIndex(0)}>Header</button>
-                        {relations && relations.length > 0 &&
+                        {/* {relations && relations.length > 0 &&
                             relations.map((relation, idx) => {
                                 return (
                                     <div key={idx}>
@@ -57,15 +53,15 @@ export const Card = ({ useCardPageStore }) => {
                                     </div>
                                 )
                             })
-                        }
+                        } */}
                     </div>
 
                     <div id="London" className={`${'w3-container'} city`}>
                         <h1 className={`${'w3-container'}`}>{`( ${recordKey} )`}</h1>
-                        <CardGrid useCardPageStore={useCardPageStore} />
+                        <CardGrid />
                     </div>
 
-                    {relations && relations.length > 0 &&
+                    {/* {relations && relations.length > 0 &&
                         relations.map((relation, idx) => {
                             return (
                                 <div key={idx}>
@@ -83,7 +79,7 @@ export const Card = ({ useCardPageStore }) => {
                                 </div>
                             )
                         })
-                    }
+                    } */}
 
                     {
                         <div className="w3-container w3-light-grey w3-padding mt-6 flex gap-4 justify-end">

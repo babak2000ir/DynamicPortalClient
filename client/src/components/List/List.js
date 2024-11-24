@@ -3,20 +3,22 @@ import { useGlobalStore } from '../../stores';
 import CoreList from './CoreList';
 import Alert, { useAlert } from '../Alert/Alert';
 
-
-export const List = ({ useListPageStore }) => {
-    const { pages, selectedPage, view } = useGlobalStore();
-    const {
+export const List = () => {
+    const { 
+        pages, 
+        selectedPage, 
+        view,
+        //Page
         loadRecords,
-        pageIndex,
+        paging: { pageIndex },
         records,
         selectedRecord,
         setSelectedRecord
-    } = useListPageStore();
-
-    const alertProps = useAlert();
+     } = useGlobalStore();
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
+
+    const alertProps = useAlert();
 
     useEffect(() => {
         loadRecords(pageMetadata.entity, view);
@@ -31,7 +33,7 @@ export const List = ({ useListPageStore }) => {
     return (
         <>
             <Alert {...alertProps} />
-            <CoreList useListPageStore={useListPageStore} setAlert={alertProps.setAlert} />
+            <CoreList setAlert={alertProps.setAlert} />
         </>
     );
 }

@@ -4,7 +4,7 @@ import { Dashboard } from './Dashboard';
 import { Page } from './Page';
 
 const Main = () => {
-    const { pagesLoaded, selectedPage } = useGlobalStore()
+    const { selectedPage } = useGlobalStore()
 
     //const loadedPage = useGlobalStore(state => state.loadedPage);
     //const loadedPageParams = useGlobalStore(state => state.loadedPageParams);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { clientCredentials } from 'axios-oauth-client';
 import credentials from '../credentials/credentials.json' with { type: "json" };
+import { isString, isEmptyObject } from '../libs/tools.js';
 
 const baseUrl = credentials.baseUrl;
 const company = credentials.company;
@@ -18,8 +19,8 @@ export const bcOperation = async (func, body) => {
     });
 
     let responseData = '';
-    
-    if (response?.data?.value) 
+
+    if (response?.data?.value)
         responseData = JSON.parse(response.data.value);
 
     return responseData;

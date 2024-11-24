@@ -1,17 +1,16 @@
 import React from 'react';
 import FieldSet from './FieldSet';
-import { useGlobalStore, selectFields } from '../../stores';
+import { useGlobalStore, getEntity } from '../../stores';
 
-
-const CardGrid = ({ useCardPageStore }) => {
+const CardGrid = () => {
     const { pages, selectedPage } = useGlobalStore();
-    const { record, numberOfColumns } = useCardPageStore();
+    const entity = useGlobalStore(getEntity);
+
+    const { numberOfColumns } = ''; //();
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
-    const fields = useGlobalStore(selectFields(pageMetadata.entity));
-
-    const fieldsInFullColumns = Math.floor(fields?.length / numberOfColumns) + 1;
+    const fieldsInFullColumns = Math.floor(entity.fields?.length / numberOfColumns) + 1;
     const colSpan = Math.floor(12 / numberOfColumns).toString();
 
     const cardGrid = [];
@@ -19,7 +18,7 @@ const CardGrid = ({ useCardPageStore }) => {
     for (let rowIdx = 0; rowIdx < fieldsInFullColumns; rowIdx++) {
         cardGrid.push(
             <div key={rowIdx} className="w3-row">
-                <FieldSet key={rowIdx} rowIdx={rowIdx} useCardPageStore={useCardPageStore} />
+                <FieldSet key={rowIdx} rowIdx={rowIdx} />
             </div>
         )
     }

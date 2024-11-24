@@ -17,7 +17,7 @@ export const getEntityRecords = async (ctx) => {
 export const getEntityRecord = async (ctx) => {
     ctx.body = await bcOperation('getEntityRecord', {
         pEntityCode: ctx.params.entityCode,
-        pKeyFieldsValue: ctx.params.keyFieldsValue || ''
+        pKeyFieldsView: ctx.request.body?.keyFieldsView || ''
     });
 };
 
@@ -25,7 +25,7 @@ export const entityAmend = async (ctx) => {
     ctx.body = await bcOperation('EntityAmend', {
         pEntityCode: ctx.params.entityCode,
         pAmendType: ctx.params.amendType,
-        pRecord: ctx.request.body?.record || '',
+        pRecord: JSON.stringify(ctx.request.body?.record) || '',
     });
 };
 

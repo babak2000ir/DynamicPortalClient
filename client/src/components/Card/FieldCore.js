@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { timeFromXmlTimeString, dateFromXmlDateString, dateTimeFromXmlDateTimeString } from '../../helpers';
 import { Tooltip } from 'react-tooltip';
 import SearchLoader from '../Loader/SearchLoader';
-import { useGlobalStore, selectFields } from '../../stores';
+import { useGlobalStore, getEntity } from '../../stores';
 
-const FieldCore = ({ useCardPageStore, fieldIdx }) => {
+const FieldCore = ({ fieldIdx }) => {
 
-    const { pages, selectedPage, entities } = useGlobalStore();
-    const { record } = useCardPageStore();
+    const { pages, selectedPage } = useGlobalStore();
+    const fields = useGlobalStore(getEntity).fields;
+    
+    const { record } = ''; // ();
 
     const f=record[fieldIdx];
 
@@ -16,7 +18,7 @@ const FieldCore = ({ useCardPageStore, fieldIdx }) => {
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
 
-    const fields = useGlobalStore(selectFields(pageMetadata.entity));
+    
 
     const fInfo=fields[fieldIdx];
 

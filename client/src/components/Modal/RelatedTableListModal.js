@@ -1,8 +1,8 @@
 import React from 'react';
-import { useGlobalStore, selectEntity } from '../../stores';
+import { useGlobalStore, getEntity } from '../../stores';
 import RelatedTableList from '../List/RelatedTableList';
 
-const RelatedTableListModal = ({useListPageStore}) => {
+const RelatedTableListModal = () => {
     const {
         showRelatedTable,
         setShowRelatedTable,
@@ -12,9 +12,9 @@ const RelatedTableListModal = ({useListPageStore}) => {
         setUpdateDisabled,
         relatedTableUpdateDisabled,
         setRelatedTableUpdateDisabled,
-        setSearchError } = useListPageStore();
+        setSearchError } = ''//();
     const { entityCode, idx, afterSelectRecord } = {};
-    const entity = useGlobalStore(selectEntity(entityCode));
+    const entity = useGlobalStore(getEntity);
 
     const handleCancel = () => {
         setShowRelatedTable(false, { entityCode });

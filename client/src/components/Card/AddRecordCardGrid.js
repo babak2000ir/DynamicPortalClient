@@ -5,10 +5,10 @@ import { useAddRecord } from '../../hooks/addRecordHook';
 import { useCancelRecordAction } from '../../hooks/cancelRecordActionHook';
 import { isFormValid } from '../../helpers';
 
-const AddRecordCardGrid = ({ useCardPageStore }) => {
+const AddRecordCardGrid = () => {
     const { fields, selectedEntityCode } = useContext(cardPageContext);
     const [fieldValidity, setFieldValidity] = useState({});
-    const { updateDisabled, setInsertFormValid } = useCardPageStore();
+    const { updateDisabled, setInsertFormValid } = ''; //();
     const handleAddRecord = useAddRecord(selectedEntityCode);
     const handleCloseCard = useCancelRecordAction(selectedEntityCode);
 

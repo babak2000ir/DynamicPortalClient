@@ -6,7 +6,7 @@ const router = new Router();
 
 router.get('/getEntities', routeHandler(getEntities));
 router.post('/getEntityRecords/:entityCode/:pageIndex', routeHandler(getEntityRecords));
-router.get('/getEntityRecord/:entityCode{/:keyFieldsValue}', routeHandler(getEntityRecord));
+router.post('/getEntityRecord/:entityCode', routeHandler(getEntityRecord));
 router.post('/entityAmend/:entityCode/:amendType', routeHandler(entityAmend));
 
 export default router;

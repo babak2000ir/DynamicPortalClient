@@ -1,4 +1,5 @@
 import { fetchCall } from './fetchSvc';
+import { getEntityCode, getRecordKeyValueArray, getRecordKeyView } from '../stores';
 
 export const loadEntities = async (set) => {
     try {
@@ -15,17 +16,17 @@ export const loadEntities = async (set) => {
     }
 }
 
-export const loadRecords = async (set, get, entityCode, view) => {
+export const loadRecords = async (set, get) => {
     try {
         set({ recordsLoading: true });
-        const response = await fetchCall(`/entity/getEntityRecords/${entityCode}/${view}/${get().pageIndex || 1}`,
-            { view },
+        const response = await fetchCall(`/entity/getEntityRecords/${getEntityCode(get())}/${get().paging.pageIndex || 1}`,
+            { view: get().view },
             'POST');
         set({
             records: [...response.data.records],
             paging: response.data.paging,
-            actualEntityCode: response.data.entityCode,
-            recordsLoading: false 
+            returnedEntityCode: response.data.entityCode,
+            recordsLoading: false
         });
     }
     catch (error) {
@@ -34,13 +35,16 @@ export const loadRecords = async (set, get, entityCode, view) => {
     }
 }
 
-export const loadRecord = async (set, entityCode, keyFieldsValue) => {
+export const loadRecord = async (set, get) => {
     try {
         set({ recordLoading: true });
-        const response = await fetchCall(`/entity/getEntityRecord/${entityCode}/${keyFieldsValue}`);
+        const response = await fetchCall(
+            `/entity/getEntityRecord/${getEntityCode(get())}`,
+            { keyFieldsView: getRecordKeyView(get()) },
+            'POST');
         set({
             record: response.data.record,
-            actualEntityCode: response.data.entityCode,
+            returnedEntityCode: response.data.entityCode,
             recordLoading: false
         });
     }
@@ -49,12 +53,13 @@ export const loadRecord = async (set, entityCode, keyFieldsValue) => {
         return error;
     }
 }
-//TODO - replace actualEntityCode with proper selector from useGlobalStore
+
 export const amendEntity = async (set, get, amendType) => {
+    const entityCode = getEntityCode(get());
     try {
         await fetchCall(
-            `/entity/entityAmend/${get().actualEntityCode}/${amendType}`,
-            { record: JSON.stringify(get().selectedRecordKeyValueArray) },
+            `/entity/entityAmend/${entityCode}/${amendType}`,
+            { record: getRecordKeyValueArray(get()) },
             'POST'
         );
         set({ records: [...get().records.filter(r => r !== get().selectedRecord)] });

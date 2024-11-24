@@ -4,7 +4,14 @@ import { loadEntities, loadRecords, loadRecord, amendEntity } from './services/e
 import { loadPages } from './services/codeSvc';
 import { isNumeric } from './helpers';
 
+export const PageMode = {
+    View: 0,
+    Edit: 1,
+    New: 2
+};
+
 export const useGlobalStore = create(devtools((set, get) => ({
+    //Global Store//
     //UI
     showSidebar: true,
     setShowSidebar: (showSidebar) => set({ showSidebar }),
@@ -16,102 +23,91 @@ export const useGlobalStore = create(devtools((set, get) => ({
     pages: [],
     loadPages: async () => loadPages(set),
 
-    //Page Stak
+    //Page Stack
     selectedPage: null,
     setSelectedPage: (selectedPage) => set({ selectedPage }),
     view: '',
     setView: (view) => set({ view }),
-    keyFieldsValue: '',
-    setKeyFieldsValue: (keyFieldsValue) => set({ keyFieldsValue }),
 
-}), 'globalStore'));
-
-export const PageMode = {
-    View: 0,
-    Edit: 1,
-    New: 2
-};
-//TODO - replace actualEntityCode with proper selector from useGlobalStore
-export const listPageStore = devtools((set, get) => ({
+    //List Page Store//
     //Entity
     recordsLoading: false,
     records: [],
-    actualEntityCode: '',
+    returnedEntityCode: '',
     paging: {
         pageIndex: 1,
         pageCount: 0,
         pageSize: 10
     },
-    loadRecords: async (entityCode, view) => loadRecords(set, get, entityCode, view),
+    setPageIndex: (pageIndex) => set({ paging: { ...get().paging, pageIndex } }),
+    loadRecords: async () => loadRecords(set, get),
     deleteSelectedRecord: async () => amendEntity(set, get, 'delete'),
 
     //Page State
     selectedRecord: [],
-    selectedRecordKey: '',
-    selectedRecordKeyValueArray: '',
-    setSelectedRecord: (selectedRecord) => {
-        set({ selectedRecord });
-
-        let keyFieldsValue = '';
-        let keyFieldsValueArray = [];
-        const entity = useGlobalStore.getState().entities.find(e => e.entityCode === get().actualEntityCode);
-        if (entity) {
-            entity.fields.filter(f => f.partOfPrimaryKey).forEach(f => {
-                if (!keyFieldsValue) {
-                    keyFieldsValue = `where(${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`;
-                    keyFieldsValueArray.push({ id: f.id, value: selectedRecord[entity.fields.indexOf(f)] });
-                }
-                else {
-                    keyFieldsValue += `,${f.id}=const(${selectedRecord[entity.fields.indexOf(f)]}`;
-                    keyFieldsValueArray.push({ id: f.id, value: selectedRecord[entity.fields.indexOf(f)] });
-                }
-            });
-            keyFieldsValue += ')';
-        }
-
-        set({ selectedRecordKeyValueArray: keyFieldsValueArray });
-        set({ selectedRecordKey: keyFieldsValue })
-    },
-    pageIndex: 1,
-    setPageIndex: (pageIndex) => set({ pageIndex }),
+    setSelectedRecord: (selectedRecord) => set({ selectedRecord }),
     pageMode: PageMode.View,
     setPageMode: (pageMode) => set({ pageMode }),
 
-}), 'listPageStore');
-
-export const cardPageStore = devtools((set, get) => ({
+    //Card Page Store//
     //UI
     numberOfColumns: 2,
 
     recordLoading: false,
     record: [],
-    loadRecord: (entityCode, keyFieldsValue) => loadRecord(set, entityCode, keyFieldsValue),
+    loadRecord: () => loadRecord(set, get),
 
-}), 'cardPageStore');
+}), 'globalStore'));
 
-//Selectors
-export const selectFields = (selectedEntityCode) => {
-    return state => isNumeric(selectedEntityCode) ?
-        state.entities?.filter(t => t.id == selectedEntityCode && t.entityCode === '')?.[0]?.fields :
-        state.entities?.filter(e => e.entityCode == selectedEntityCode)?.[0]?.fields;
+export const getEntityCode = (state) => 
+    state.pages.find(p => p.id === state.selectedPage).entity;
+
+export const getEntity = (state) =>
+    state.entities?.filter(e => e.entityCode === getEntityCode(state))?.[0];
+
+export const getRecordKeyView = (state) => {
+    if (!state.selectedRecord) return '';
+    
+    const entity = getEntity(state);
+
+    let keyFieldsValue = '';
+    if (entity) {
+        entity.fields.filter(f => f.partOfPrimaryKey).forEach(f => {
+            if (!keyFieldsValue) {
+                keyFieldsValue = `where(${f.id}=const(${state.selectedRecord[entity.fields.indexOf(f)]}`;
+            }
+            else {
+                keyFieldsValue += `,${f.id}=const(${state.selectedRecord[entity.fields.indexOf(f)]}`;
+            }
+        });
+        keyFieldsValue += '))';
+    }
+    return keyFieldsValue;
 }
 
-export const selectEntity = (selectedEntityCode) => {
-    return state => isNumeric(selectedEntityCode) ?
-        state.entities?.filter(t => t.id == selectedEntityCode && t.entityCode === '')?.[0] :
-        state.entities?.filter(e => e.entityCode == selectedEntityCode)?.[0];
+export const getRecordKeyValueArray = (state) => {
+    const entity = getEntity(state);
+    let keyFieldsValueArray = [];
+    if (entity) {
+        entity.fields.filter(f => f.partOfPrimaryKey).forEach(f => {
+            keyFieldsValueArray.push({ id: f.id, value: state.selectedRecord[entity.fields.indexOf(f)] });
+        });
+    }
+    return keyFieldsValueArray;
 }
+
+//
 
 export const selectRelatedEntityCode = (selectedEntityCode) => {
     return state => isNumeric(selectedEntityCode) ?
-        state.entities?.filter(t => t.id == selectedEntityCode)?.[0]?.entityCode :
-        state.entities?.filter(e => e.entityCode == selectedEntityCode)?.[0]?.entityCode;
+        state.entities?.filter(t => t.id === selectedEntityCode)?.[0]?.entityCode :
+        state.entities?.filter(e => e.entityCode === selectedEntityCode)?.[0]?.entityCode;
 }
 
 export const selectRelations = (selectedEntityCode) => {
     return state => isNumeric(selectedEntityCode) ?
-        state.entities?.filter(t => t.id == selectedEntityCode)?.[0]?.relations :
-        state.entities?.filter(e => e.entityCode == selectedEntityCode)?.[0]?.relations;
+        state.entities?.filter(t => t.id === selectedEntityCode)?.[0]?.relations :
+        state.entities?.filter(e => e.entityCode === selectedEntityCode)?.[0]?.relations;
 }
 //Debug
 window.useGlobalStore = useGlobalStore;

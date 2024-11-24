@@ -1,5 +1,4 @@
-import { create } from 'zustand';
-import { useGlobalStore, listPageStore, cardPageStore } from "../stores";
+import { useGlobalStore } from "../stores";
 import { List } from "./List/List";
 import { Card } from "./Card/Card";
 
@@ -9,19 +8,15 @@ export const Page = () => {
 
     switch (pageType) {
         case 'list':
-            const useListPageStore = create(listPageStore);
-            window.useListPageStore = useListPageStore;
             return (
                 <div className='w3-col m12'>
-                    <List useListPageStore={useListPageStore} />
+                    <List />
                 </div>
             );
         case 'card':
-            const useCardPageStore = create(cardPageStore);
-            window.useCardPageStore = useCardPageStore;
             return (
                 <div className='w3-col m12'>
-                    <Card useCardPageStore={useCardPageStore} />
+                    <Card />
                 </div>
             );
         default:

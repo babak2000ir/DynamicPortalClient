@@ -4,13 +4,20 @@ import { useGlobalStore, selectFields, PageMode } from '../../stores';
 import { Tooltip } from 'react-tooltip';
 import SearchLoader from '../Loader/SearchLoader';
 
-const AddRecordFieldCore = ({ useListPageStore, field }) => {
-    const { record, setRecord, pageMode } = useListPageStore();
-    const { entities, selectedPage, pages } = useGlobalStore();
+const AddRecordFieldCore = ({ field }) => {
+    const {
+        entities,
+        selectedPage,
+        pages,
+        //Page
+        record,
+        setRecord,
+        pageMode
+    } = useGlobalStore();
 
     const pageMetadata = pages.find(page => page.id === selectedPage);
     const fields = useGlobalStore(selectFields(pageMetadata.entity));
-    
+
     const [fieldValue, setFieldValue] = useState('');
     const [fieldName, setFieldName] = useState('');
 

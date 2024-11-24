@@ -4,9 +4,9 @@ import { useGlobalStore, selectFields } from '../../stores';
 import { amendEntity } from '../../services/entitySvc';
 import { mapPrimaryKeyFieldstoRecord } from '../../helpers';
 
-const ConfirmationModal = ({ useCardPageStore }) => {
+const ConfirmationModal = () => {
     const { setShowModal, showModal, modalParams, setRowIndex, setAlert } = useGlobalStore();
-    const { setShowCard, setUpdateDisabled, setSearchError } = useCardPageStore();
+    const { setShowCard, setUpdateDisabled, setSearchError } = ''; //();
     const fields = useGlobalStore(selectFields(modalParams?.selectedEntityCode));
 
     const handleCancel = () => {

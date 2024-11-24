@@ -1,14 +1,11 @@
 import React from 'react';
 import FieldControl from './FieldControl';
-import { useGlobalStore, selectFields } from '../../stores';
+import { useGlobalStore, getEntity } from '../../stores';
 
-const FieldSet = ({ useCardPageStore, rowIdx }) => {
-    const { pages, selectedPage } = useGlobalStore();
-    const { record, numberOfColumns } = useCardPageStore();
+const FieldSet = ({ rowIdx }) => {
+    const fields = useGlobalStore().fields;
 
-    const pageMetadata = pages.find(page => page.id === selectedPage);
-
-    const fields = useGlobalStore(selectFields(pageMetadata.entity));
+    const { numberOfColumns } = ''; //();
 
     const colSpan = Math.floor(12 / numberOfColumns).toString();
 
@@ -20,7 +17,7 @@ const FieldSet = ({ useCardPageStore, rowIdx }) => {
         if (fields[fieldIdx])
             fieldSet.push(
                 <div key={fieldIdx} className={`w3-col m${colSpan}`}>
-                    <FieldControl key={fieldIdx} fieldIdx={fieldIdx} useCardPageStore={useCardPageStore} />
+                    <FieldControl key={fieldIdx} fieldIdx={fieldIdx} />
                 </div>
             )
     }
